@@ -7,9 +7,9 @@ from api.sql import *
 api = Blueprint('api', __name__, template_folder='./templates')
 
 login_manager = LoginManager(api)
-login_manager.login_view = 'api.login'
+#login_manager.login_view = 'api.login' # type: ignore
+login_manager.login_view = 'api.P1_Operatorlogin' # type: ignore
 login_manager.login_message = "請先登入"
-
 class User(UserMixin):
     pass
 
@@ -17,7 +17,8 @@ class User(UserMixin):
 def user_loader(userid):  
     user = User()
     user.id = userid
-    data = Member.get_role(userid)
+    #data = Member.get_role(userid)
+    data = P1_Operator.get_operatorrole(userid)
     try:
         user.role = data[0]
         user.name = data[1]
@@ -25,13 +26,49 @@ def user_loader(userid):
         pass
     return user
 
+@api.route('/P1_Operatorlogin', methods=['POST', 'GET'])
+def P1_Operatorlogin():
+    if request.method == 'POST':
+
+        account = request.form['account']
+        password = request.form['password']
+        data = P1_Operator.get_operator(account)  # type: ignore
+
+        try:
+            uemp_id = data[0][0]
+            DB_password = data[0][1]
+            user_id = data[0][2]
+            identity = data[0][3]
+
+        except:
+            flash('*沒有此帳號')
+            return redirect(url_for('api.P1_Operatorlogin'))
+
+        if(DB_password == password ):
+            user = User()
+            user.id = user_id
+            user.umpid=account
+            login_user(user)
+
+            if( identity == 'OP'):
+                return redirect(url_for('bookstore.bookstore'))
+            else:
+                return redirect(url_for('manager.productManager'))
+        
+        else:
+            flash('*密碼錯誤，請再試一次')
+            return redirect(url_for('api.login'))
+
+    
+    return render_template('P1_Operatorlogin.html')
+
 @api.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
 
         account = request.form['account']
-        password = request.form['password']
-        data = Member.get_member(account) 
+        password = request.form['Password']
+        data = Member.get_member(account)  # type: ignore
 
         try:
             DB_password = data[0][1]
@@ -58,6 +95,32 @@ def login():
 
     
     return render_template('login.html')
+#
+@api.route('/P1_OperatorRegister', methods=['POST', 'GET'])
+def P1_OperatorRegister():
+    if request.method == 'POST':
+        user_operator = request.form['uEmpId']
+        exist_operator = P1_Operator.get_all_operator()
+        operator_list = []
+        for i in exist_operator:
+            operator_list.append(i[0])
+
+        if(user_operator in operator_list):
+            flash('Falied!')
+            return redirect(url_for('api.P1_OperatorRegister'))
+        else:
+            input = { 
+                'uEmpId':user_operator, 
+                'Name': request.form['username'], 
+                'AccessLevel': request.form['AccessLevel'], 
+                'Shift': request.form['Shift'], 
+                'HiredDate':request.form['HiredDate'] ,
+                'password':request.form['password']
+            }
+            P1_Operator.create_operator(input)
+            return redirect(url_for('api.P1_OperatorRegister'))
+
+    return render_template('P1_OperatorRegister.html')
 
 @api.route('/register', methods=['POST', 'GET'])
 def register():

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}P1 Register Page{% endblock title%}
+
+{% block content%}
+<div class="position-absolute top-50 start-50 translate-middle outer_div">
+    <a href="{{ url_for('index') }}"><img class="icon" src="{{ url_for('static', filename='./img/MESlogo.jfif') }}"></a>
+    <h1 class="register_title mb-3 mt-3">人員建立</h1>
+
+    <div class="form_div">
+        <form  method='post' action={{ url_for('api.P1_OperatorRegister') }} >
+            <p class="mb-3">
+                姓名：<input type="text" name="username" required/>
+            </p>
+    
+            <p class="mb-3">
+                帳號：<input type="text" name="uEmpId" required/>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <p class="same_account">
+                    *已經有相同的帳號名稱
+                </p>
+                {% endif %}
+                {% endwith %}
+            </p>
+            <p class="mb-4">
+                密碼：<input type="password" name="password" required/>
+            </p>
+            <div class="btn_div mb-4" style="margin-bottom: 1rem;">
+                <p class="option_div">選擇班別：</p>
+                <select name="Shift">
+                    <option value="A" selected>A班</option>
+                    <option value="B" >B班</option>
+                </select>
+            </div>
+            <p class="mb-3">
+                入職時間：<input type="text" name="HiredDate" required/>
+            </p>
+            <div class="btn_div mb-4" style="margin-bottom: 1rem;">
+                <p class="option_div">選擇你要註冊的身份：</p>
+                <select name="AccessLevel">
+                    <option value="OP" selected>操作員</option>
+                    <option value="manager" >管理員</option>
+                </select>
+            </div>
+    
+            <p>
+                <a href="{{ url_for('index') }}">
+                    <button type="button" class="register_btn">回上頁</button>
+                </a>
+                <button type="submit" class="register_btn"> 註冊</button>
+            </p>
+        </form>
+    </div>
+</div>
+{% endblock content%}

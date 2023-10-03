@@ -32,6 +32,18 @@
 {% endif %}
 {% endwith %}
 
+{% with messages = get_flashed_messages() %}
+{% if messages[0] == 'duplicated product name' %}
+  
+<script language="javascript">
+
+  alert('已有此商品名稱，無法新增同樣的商品');
+
+</script>
+
+{% endif %}
+{% endwith %}
+
 <script>
     $(document).ready(function(){
         $("#keyword").on("keyup", function() {

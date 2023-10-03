@@ -59,6 +59,45 @@ def book():
         book_data.append(book)
     return book_data
 
+
+@manager.route('/Tooladd', methods=['GET', 'POST'])
+def Tooladd():
+    if request.method == 'POST':
+        data = ""
+        while(data != None):
+            number = str(random.randrange( 10000, 99999))
+            en = random.choice(string.ascii_letters)
+            pid = en + number
+            data = Product.get_product(pid)
+
+        name = request.values.get('Toolname')
+        tId = request.values.get('ToolId')
+        category = request.values.get('ToolType')
+        UpdateTime = request.values.get('UpdateTime')
+
+        if (len(name) < 1 or len(price) < 1):
+            return redirect(url_for('manager.productManager'))
+        
+        duprecord=Product.preadd_name(name)
+        
+        if(duprecord!=None):
+            flash('duplicated product name')
+            return redirect(url_for('manager.productManager'))
+        
+        Product.add_product(
+            {'tId' : pid,
+             'ToolName' : name,
+             'Type' : tId,
+             'uEmpId' : current_user,
+             'UpdateTime':UpdateTime
+            }
+        )
+
+        return redirect(url_for('manager.productManager'))
+
+    return render_template('productManager.html')
+
+
 @manager.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
@@ -75,6 +114,12 @@ def add():
         description = request.values.get('description')
 
         if (len(name) < 1 or len(price) < 1):
+            return redirect(url_for('manager.productManager'))
+        
+        duprecord=Product.preadd_name(name)
+        
+        if(duprecord!=None):
+            flash('duplicated product name')
             return redirect(url_for('manager.productManager'))
         
         Product.add_product(

@@ -28,6 +28,20 @@ class DB():
     def commit():
         connection.commit()
 
+class P1_Operator():
+    def get_operator(OPName):
+        sql = "SELECT UEMPID,Password,NAME,ACCESSLEVEL,Shift,HiredDate FROM Operator WHERE UEMPID = :id"
+        return DB.fetchall(DB.execute_input(DB.prepare(sql), {'id' : OPName}))
+    def get_all_operator():
+        sql = "SELECT UEMPID FROM Operator"
+        return DB.fetchall(DB.execute(DB.connect(), sql))
+    def create_operator(input):
+        sql = 'INSERT INTO Operator VALUES (:uEmpId, :name, :AccessLevel, :Shift, :HiredDate,:password)'
+        DB.execute_input(DB.prepare(sql), input)
+        DB.commit()
+    def get_operatorrole(UEMPID):
+        sql = 'SELECT ACCESSLEVEL, NAME FROM Operator WHERE UEMPID = :UEMPID '
+        return DB.fetchone(DB.execute_input( DB.prepare(sql), {'UEMPID':UEMPID}))
 class Member():
     def get_member(account):
         sql = "SELECT ACCOUNT, PASSWORD, MID, IDENTITY, NAME FROM MEMBER WHERE ACCOUNT = :id"
@@ -90,6 +104,10 @@ class Product():
     def get_name(pid):
         sql = 'SELECT PNAME FROM PRODUCT WHERE PID = :id'
         return DB.fetchone(DB.execute_input( DB.prepare(sql), {'id':pid}))[0]
+    
+    def preadd_name(pname):
+        sql = 'SELECT PNAME FROM PRODUCT WHERE PNAME = :name'
+        return DB.fetchone(DB.execute_input( DB.prepare(sql), {'name':pname}))
 
     def add_product(input):
         sql = 'INSERT INTO PRODUCT VALUES (:pid, :name, :price, :category, :description)'
@@ -158,17 +176,17 @@ class Order_List():
     
     def get_orderdetail():
         sql = 'SELECT O.OID, P.PNAME, R.SALEPRICE, R.AMOUNT FROM ORDER_LIST O, RECORD R, PRODUCT P WHERE O.TNO = R.TNO AND R.PID = P.PID'
-        return DB.fetchall(DB.execute(DB.connect(), sql))
+        return DB.fetchall(DB.execute(DB.connect(), sql)) # type: ignore
 
 
 class Analysis():
     def month_price(i):
         sql = 'SELECT EXTRACT(MONTH FROM ORDERTIME), SUM(PRICE) FROM ORDER_LIST WHERE EXTRACT(MONTH FROM ORDERTIME)=:mon GROUP BY EXTRACT(MONTH FROM ORDERTIME)'
-        return DB.fetchall( DB.execute_input( DB.prepare(sql) , {"mon": i}))
+        return DB.fetchall( DB.execute_input( DB.prepare(sql) , {"mon": i})) # type: ignore
 
     def month_count(i):
         sql = 'SELECT EXTRACT(MONTH FROM ORDERTIME), COUNT(OID) FROM ORDER_LIST WHERE EXTRACT(MONTH FROM ORDERTIME)=:mon GROUP BY EXTRACT(MONTH FROM ORDERTIME)'
-        return DB.fetchall( DB.execute_input( DB.prepare(sql), {"mon": i}))
+        return DB.fetchall( DB.execute_input( DB.prepare(sql), {"mon": i})) # type: ignore
     
     def category_sale():
         sql = 'SELECT SUM(TOTAL), CATEGORY FROM(SELECT * FROM PRODUCT,RECORD WHERE PRODUCT.PID = RECORD.PID) GROUP BY CATEGORY'
