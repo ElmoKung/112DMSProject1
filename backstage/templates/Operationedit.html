@@ -1,0 +1,50 @@
+{% extends "backstage.html" %}
+{% block head %}
+{{ super() }}
+
+{% endblock head %}
+
+{% block title %}工作站修改{% endblock title%}
+
+{% block content%}
+
+
+<br/>
+<div class="container-xl">
+  <br/>
+  <form method="post" enctype=multipart/form-data action={{ url_for('manager.Operationedit') }}>
+    <table class="table table-bordered">
+      <tr>
+        <th>工作站編號</th>
+        <td><input class="form-control" type="text" value="{{ data.工作站編號 }}" name="OId" readonly class="id_input"></td>
+      </tr>
+      <tr>
+        <th>工作站名稱</th>
+        <td><input class="form-control" type="text" value="{{ data.工作站名稱 }}" name="OperationName" required></td>
+      </tr>
+      <tr>
+        <th>工作站說明</th>
+        <td><input class="form-control" type="text" value="{{ data.工作站說明 }}" name="Description" required></td>
+      </tr>
+      <tr>
+        <th>配方ID</th>
+        <td><input class="form-control" type="text" value="{{ data.配方ID }}" name="PPId" required></td>
+      </tr>
+      <tr>
+        <th>維護時間</th>
+        <td><input class="form-control" type="text" value="{{ data.維護時間 }}" name="UpdateTime" required></td>
+      </tr>
+    </table>
+    <center>
+      <div class="option">
+        <button class="btn btn-outline-success" type="submit">確定修改</button> 
+        <a href="{{ url_for('manager.P1_Operation') }}"><button class="btn btn-outline-danger">回工作站管理</button></a>
+      </div>
+    </center>
+
+  </form>
+</div>
+
+
+
+{% endblock content%}

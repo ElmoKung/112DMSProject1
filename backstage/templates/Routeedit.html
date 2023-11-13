@@ -1,0 +1,43 @@
+{% extends "backstage.html" %}
+{% block head %}
+{{ super() }}
+
+{% endblock head %}
+
+{% block title %}流程修改{% endblock title%}
+
+{% block content%}
+
+
+<br/>
+<div class="container-xl">
+  <br/>
+  <form method="post" enctype=multipart/form-data action={{ url_for('manager.Routeedit') }}>
+    <table class="table table-bordered">
+      <tr>
+        <th>流程編號</th>
+        <td><input class="form-control" type="text" value="{{ data.流程編號 }}" name="rId" readonly class="id_input"></td>
+      </tr>
+      <tr>
+        <th>流程名稱</th>
+        <td><input class="form-control" type="text" value="{{ data.流程名稱 }}" name="RouteName" required></td>
+      </tr>
+      <tr>
+        <th>流程說明</th>
+        <td><input class="form-control" type="text" value="{{ data.流程說明 }}" name="RouteDesc" required></td>
+      </tr>
+
+    </table>
+    <center>
+      <div class="option">
+        <button class="btn btn-outline-success" type="submit">確定修改</button> 
+        <a href="{{ url_for('manager.P1_Route') }}"><button class="btn btn-outline-danger">回流程管理</button></a>
+      </div>
+    </center>
+
+  </form>
+</div>
+
+
+
+{% endblock content%}

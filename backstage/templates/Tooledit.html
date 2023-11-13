@@ -1,0 +1,71 @@
+{% extends "backstage.html" %}
+{% block head %}
+{{ super() }}
+
+{% endblock head %}
+
+{% block title %}配件修改{% endblock title%}
+
+{% block content%}
+
+
+<br/>
+<div class="container-xl">
+  <br/>
+  <form method="post" enctype=multipart/form-data action={{ url_for('manager.Tooledit') }}>
+    <table class="table table-bordered">
+      <tr>
+        <th>配件編號</th>
+        <td><input class="form-control" type="text" value="{{ data.配件編號 }}" name="tid" readonly class="id_input"></td>
+      </tr>
+      <tr>
+        <th>配件名稱</th>
+        <td><input class="form-control" type="text" value="{{ data.配件名稱 }}" name="ToolName" required></td>
+      </tr>
+      <tr>
+        <th>配件類別</th>
+        <td>
+          <select class="form-control" name="Type">
+            {% if data.類別 == '刀' %}
+              <option value="板">board</option>
+              <option value="筆">pen</option>
+              <option value="刀" selected>knife</option>
+            {% elif data.類別 == '筆' %}
+            <option value="板">board</option>
+            <option value="筆" selected>pen</option>
+            <option value="刀" >knife</option>
+            {% else %}
+            <option value="板" selected>board</option>
+            <option value="筆">pen</option>
+            <option value="刀" >knife</option>
+            {% endif %}
+            
+        </select>
+        </td>
+      </tr>
+      <tr>
+        <th>更新時間</th>
+        <td>
+          <textarea class="form-control" name="updatetime">{{ data.更新時間 }}</textarea>
+        </td>
+      </tr>
+      <!-- <tr>
+        <th>商品圖片</th>
+        <td>
+          <input type="file" name="file" id="file-uploader" data-target="file-uploader"/>
+        </td>
+      </tr> -->
+    </table>
+    <center>
+      <div class="option">
+        <button class="btn btn-outline-success" type="submit">確定修改</button> 
+        <a href="{{ url_for('manager.P1_Tool') }}"><button class="btn btn-outline-danger">回配件管理</button></a>
+      </div>
+    </center>
+
+  </form>
+</div>
+
+
+
+{% endblock content%}

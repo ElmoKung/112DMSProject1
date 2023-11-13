@@ -1,0 +1,45 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}WO{% endblock title%}
+
+{% block content%}
+<br/>
+<div class="container-xl">
+  <form method="post" action={{ url_for('WorkOrder.wo') }}>
+    <table class="table table-bordered">
+      <tr>
+        <th><center>工單編號</center></th>
+        <th><center>工單名稱</center></th>
+        <th><center>流程編號</center></th>
+        <th><center>產品編號</center></th>
+      </tr>
+      {% for prod in data %}
+      <tr>
+        <td> <center>{{ prod.工單編號 }}</center></td>
+        <td> <center>{{ prod.工單名稱 }}</center></td>
+        <td> <center>{{ prod.流程編號 }}</center></td>
+        <td width="20%">
+          <center>
+            {{ prod.產品編號 }}
+          </center>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    <div class="col align-self-end">
+      
+    </div>
+
+    
+    <center> 
+      <div class="option">
+        <a href="{{ url_for('WorkOrder.wostore') }}" class="btn btn-outline-primary">回產品列表</a>
+    </div>
+    </center>
+
+  </form>
+</div>
+{% endblock content%}

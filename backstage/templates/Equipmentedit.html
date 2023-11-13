@@ -1,0 +1,71 @@
+{% extends "backstage.html" %}
+{% block head %}
+{{ super() }}
+
+{% endblock head %}
+
+{% block title %}設備修改{% endblock title%}
+
+{% block content%}
+
+
+<br/>
+<div class="container-xl">
+  <br/>
+  <form method="post" enctype=multipart/form-data action={{ url_for('manager.Equipmentedit') }}>
+    <table class="table table-bordered">
+      <tr>
+        <th>設備編號</th>
+        <td><input class="form-control" type="text" value="{{ data.設備編號 }}" name="eId" readonly class="id_input"></td>
+      </tr>
+      <tr>
+        <th>設備名稱</th>
+        <td><input class="form-control" type="text" value="{{ data.設備名稱 }}" name="EquipmentName" required></td>
+      </tr>
+      <tr>
+        <th>設備類別</th>
+        <td>
+          <select class="form-control" name="Type">
+            {% if data.類別 == 'PackingPlantForm' %}
+              <option value="PartsPlantForm">零件組裝工作臺</option>
+              <option value="QualityPlantForm">品質檢驗工作檯</option>
+              <option value="PackingPlantForm" selected>包裝台</option>
+            {% elif data.類別 == 'QualityPlantForm' %}
+            <option value="PartsPlantForm">零件組裝工作臺</option>
+            <option value="QualityPlantForm" selected>品質檢驗工作檯</option>
+            <option value="PackingPlantForm" >包裝台</option>
+            {% else %}
+            <option value="PartsPlantForm" selected>零件組裝工作臺</option>
+            <option value="QualityPlantForm">品質檢驗工作檯</option>
+            <option value="PackingPlantForm" >包裝台</option>
+            {% endif %}
+            
+        </select>
+        </td>
+      </tr>
+      <tr>
+        <th>綁訂工作站編號</th>
+        <td>
+          <textarea class="form-control" name="OId">{{ data.綁定工作站編號 }}</textarea>
+        </td>
+      </tr>
+      <!-- <tr>
+        <th>商品圖片</th>
+        <td>
+          <input type="file" name="file" id="file-uploader" data-target="file-uploader"/>
+        </td>
+      </tr> -->
+    </table>
+    <center>
+      <div class="option">
+        <button class="btn btn-outline-success" type="submit">確定修改</button> 
+        <a href="{{ url_for('manager.P1_Equipment') }}"><button class="btn btn-outline-danger">回設備管理</button></a>
+      </div>
+    </center>
+
+  </form>
+</div>
+
+
+
+{% endblock content%}

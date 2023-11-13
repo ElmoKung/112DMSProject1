@@ -1,0 +1,43 @@
+{% extends "backstage.html" %}
+{% block head %}
+{{ super() }}
+
+{% endblock head %}
+
+{% block title %}配方修改{% endblock title%}
+
+{% block content%}
+
+
+<br/>
+<div class="container-xl">
+  <br/>
+  <form method="post" enctype=multipart/form-data action={{ url_for('manager.Recipeedit') }}>
+    <table class="table table-bordered">
+      <tr>
+        <th>配方編號</th>
+        <td><input class="form-control" type="text" value="{{ data.配方編號 }}" name="PPId" readonly class="id_input"></td>
+      </tr>
+      <tr>
+        <th>配方名稱</th>
+        <td><input class="form-control" type="text" value="{{ data.配方名稱 }}" name="Recipe" required></td>
+      </tr>
+      <tr>
+        <th>配方說明</th>
+        <td><input class="form-control" type="area" value="{{ data.配方說明 }}" name="Description" required></td>
+      </tr>
+
+    </table>
+    <center>
+      <div class="option">
+        <button class="btn btn-outline-success" type="submit">確定修改</button> 
+        <a href="{{ url_for('manager.P1_Recipe') }}"><button class="btn btn-outline-danger">回配方管理</button></a>
+      </div>
+    </center>
+
+  </form>
+</div>
+
+
+
+{% endblock content%}

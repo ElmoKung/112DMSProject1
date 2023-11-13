@@ -66,7 +66,7 @@
         <input class="form-control me-2" id="keyword" placeholder="搜尋配件" aria-label="Search">
     </div>
     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-        新增商品
+        新增配件
     </button>
 </div>
 
@@ -85,7 +85,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputtId" class="form-label">配件編號</label>
-                        <input type="number" class="form-control" id="inputUnitPrice" name="ToolId" required>
+                        <input type="text" class="form-control" id="inputUnitPrice" name="ToolId" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputToolType" class="form-label">配件種類</label>
@@ -114,7 +114,7 @@
 
 <div class="container-xxl">
 
-<form method='post' action={{ url_for('manager.productManager') }} >
+<form method='post' action={{ url_for('manager.P1_Tool') }} >
 <table id="manager" class="table table-bordered">
     <thead>
         <tr>
@@ -125,13 +125,13 @@
         </tr>
     </thead>
     <tbody id="Tool">
-    {% for i in book_data %}
+    {% for i in P1_Tool_data %}
         <tr>
             <td><center>{{ i.配件編號 }}</center></td>
             <td><center>{{ i.配件名稱 }}</center></td>
             <td><center>{{ i.配件類別 }}</center></td>
             <td><center><button type="submit" value="{{i.配件編號}}" name="edit" class="btn btn-success">編輯配件</button></center></td>
-            <td><center><button type="submit" value="{{i.配件編號}}" name="delete" onclick="return (confirm('你確定要刪除 \'{{ i.配件名稱 }}\' 嗎？'))" class="btn btn-danger">刪除商品</button></center></td>
+            <td><center><button type="submit" value="{{i.配件編號}}" name="delete" onclick="return (confirm('你確定要刪除 \'{{ i.配件名稱 }}\' 嗎？'))" class="btn btn-danger">刪除配件</button></center></td>
         </tr>
     {% endfor %}
     </tbody>

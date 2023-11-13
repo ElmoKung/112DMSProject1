@@ -1,0 +1,60 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}WOStore{% endblock title%}
+
+{% block content %}
+
+{% set temp = 'img/' + data.產品圖片 %}
+
+<br/>
+<div class="row">
+<div class="card" style="width: 20rem;margin-left:5%">
+  <img src={{ url_for('static', filename = temp  ) }} class="card-img-top">
+  <div class="card-body">
+    <h5 class="card-title">{{ data.產品名稱 }}</h5>
+    <p class="card-text"></p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><b>產品名稱</b>&nbsp;&nbsp;{{ data.產品名稱 }}</li>
+    <li class="list-group-item"><b>需求廠商</b>&nbsp;&nbsp;{{ data.需求廠商 }}</li>
+  </ul>
+  <div class="card-body">
+    <a href="{{ url_for('WorkOrder.wostore') }}" class="btn btn-outline-primary">回產品列表</a>
+  </div>
+</div>
+
+
+<div class="col-sm-6">
+  <form method="post" action={{ url_for('WorkOrder.wo') }}>
+<div class="card" style="margin-top:10%">
+  <h5 class="card-header">產品介紹</h5>
+  <div class="card-body">
+    <p class="card-text">
+      {{data.使用料件}}
+    </p>
+    <div class="mb-3">
+      <select id="inputToolType" class="form-select" name="Route" required>
+          <option selected disabled value="">請選擇生產流程</option>
+
+    {% for Rouw_raw in RouteData %}
+    
+    <option value="{{Rouw_raw[0]}}">{{Rouw_raw[1]}}</option>
+
+    {% endfor %}
+
+</select>
+</div>
+    <button class="btn btn-outline-success" type="submit" value="{{data.產品編號}}" name="pid">加入工單</a>
+  </div>
+</div>
+</form>
+</div>
+
+
+</div>
+
+
+{% endblock content%}

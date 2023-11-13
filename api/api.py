@@ -18,10 +18,11 @@ def user_loader(userid):
     user = User()
     user.id = userid
     #data = Member.get_role(userid)
-    data = P1_Operator.get_operatorrole(userid)
+    data = P1Operator.get_operatorrole(userid)
     try:
         user.role = data[0]
         user.name = data[1]
+        user.umpid = data[2]
     except:
         pass
     return user
@@ -32,14 +33,13 @@ def P1_Operatorlogin():
 
         account = request.form['account']
         password = request.form['password']
-        data = P1_Operator.get_operator(account)  # type: ignore
+        data = P1Operator.get_operator(account)  # type: ignore
 
         try:
-            uemp_id = data[0][0]
             DB_password = data[0][1]
-            user_id = data[0][2]
+            user_id = data[0][0]
             identity = data[0][3]
-
+            uempid=data[0][0]
         except:
             flash('*沒有此帳號')
             return redirect(url_for('api.P1_Operatorlogin'))
@@ -47,13 +47,13 @@ def P1_Operatorlogin():
         if(DB_password == password ):
             user = User()
             user.id = user_id
-            user.umpid=account
+            user.umpid = uempid
             login_user(user)
 
             if( identity == 'OP'):
-                return redirect(url_for('bookstore.bookstore'))
+                return redirect(url_for('WorkOrder.wostore'))
             else:
-                return redirect(url_for('manager.productManager'))
+                return redirect(url_for('manager.P1_Tool'))
         
         else:
             flash('*密碼錯誤，請再試一次')
@@ -67,7 +67,7 @@ def login():
     if request.method == 'POST':
 
         account = request.form['account']
-        password = request.form['Password']
+        password = request.form['password']
         data = Member.get_member(account)  # type: ignore
 
         try:
@@ -87,7 +87,7 @@ def login():
             if( identity == 'user'):
                 return redirect(url_for('bookstore.bookstore'))
             else:
-                return redirect(url_for('manager.productManager'))
+                return redirect(url_for('manager.Product'))
         
         else:
             flash('*密碼錯誤，請再試一次')
@@ -100,7 +100,7 @@ def login():
 def P1_OperatorRegister():
     if request.method == 'POST':
         user_operator = request.form['uEmpId']
-        exist_operator = P1_Operator.get_all_operator()
+        exist_operator = P1Operator.get_all_operator()
         operator_list = []
         for i in exist_operator:
             operator_list.append(i[0])
@@ -117,7 +117,7 @@ def P1_OperatorRegister():
                 'HiredDate':request.form['HiredDate'] ,
                 'password':request.form['password']
             }
-            P1_Operator.create_operator(input)
+            P1Operator.create_operator(input)
             return redirect(url_for('api.P1_OperatorRegister'))
 
     return render_template('P1_OperatorRegister.html')

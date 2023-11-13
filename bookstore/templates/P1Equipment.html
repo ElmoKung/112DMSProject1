@@ -1,0 +1,61 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}Equipment{% endblock title%}
+
+{% block content %}
+
+{% set temp = 'img/' + data.產品圖片 %}
+
+<br/>
+<div class="row">
+<div class="card" style="width: 20rem;margin-left:5%">
+  <img src={{ url_for('static', filename = temp  ) }} class="card-img-top">
+  <div class="card-body">
+    <h5 class="card-title">{{ data.設備名稱 }}</h5>
+    <p class="card-text"></p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><b>設備名稱</b>&nbsp;&nbsp;{{ data.設備名稱 }}</li>
+    <li class="list-group-item"><b>設備類型</b>&nbsp;&nbsp;{{ data.設備類型 }}</li>
+  </ul>
+  <div class="card-body">
+    <a href="{{ url_for('WorkOrder.wostore') }}" class="btn btn-outline-primary">回設備列表</a>
+  </div>
+</div>
+
+
+<div class="col-sm-6">
+  <form method="post" action={{ url_for('WorkOrder.eq') }}>
+<div class="card" style="margin-top:10%">
+  <h5 class="card-header">設備介紹</h5>
+  <div class="card-body">
+    <p class="card-text">
+      {{data.綁訂工作站編號}}
+    </p>
+    <div class="mb-3">
+      <select id="inputToolType" class="form-select" name="Tool" required>
+          <option selected disabled value="">請選擇設備配件</option>
+
+    {% for Tool_raw in ToolData %}
+    
+    <option value="{{Tool_raw[0]}}">{{Tool_raw[1]}}</option>
+        
+    {% endfor %}
+    <input type="text" id="inputEqAt" name="workStartAt" >開始時間</input required>
+    <input type="text" id="inputEqEt"  name="workEndAt" >結束時間</input required>
+</select>
+</div>
+    <button class="btn btn-outline-success" type="submit" value="{{data.設備編號}}" name="pid">新增紀錄</a>
+  </div>
+</div>
+</form>
+</div>
+
+
+</div>
+
+
+{% endblock content%}

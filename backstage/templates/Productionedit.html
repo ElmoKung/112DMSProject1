@@ -1,0 +1,47 @@
+{% extends "backstage.html" %}
+{% block head %}
+{{ super() }}
+
+{% endblock head %}
+
+{% block title %}產品修改{% endblock title%}
+
+{% block content%}
+
+
+<br/>
+<div class="container-xl">
+  <br/>
+  <form method="post" enctype=multipart/form-data action={{ url_for('manager.Productionedit') }}>
+    <table class="table table-bordered">
+      <tr>
+        <th>產品編號</th>
+        <td><input class="form-control" type="text" value="{{ data.產品編號 }}" name="pId" readonly class="id_input"></td>
+      </tr>
+      <tr>
+        <th>產品名稱</th>
+        <td><input class="form-control" type="text" value="{{ data.產品名稱 }}" name="ProductionName" required></td>
+      </tr>
+      <tr>
+        <th>需求廠商</th>
+        <td><input class="form-control" type="text" value="{{ data.需求廠商 }}" name="Vendor" required></td>
+      </tr>
+      <tr>
+        <th>料號</th>
+        <td><input class="form-control" type="text" value="{{ data.料號 }}" name="Device" required></td>
+      </tr>
+
+    </table>
+    <center>
+      <div class="option">
+        <button class="btn btn-outline-success" type="submit">確定修改</button> 
+        <a href="{{ url_for('manager.P1_Production') }}"><button class="btn btn-outline-danger">回產品管理</button></a>
+      </div>
+    </center>
+
+  </form>
+</div>
+
+
+
+{% endblock content%}

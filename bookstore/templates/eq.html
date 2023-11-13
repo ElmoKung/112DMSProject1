@@ -1,0 +1,42 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}EQUSE{% endblock title%}
+
+{% block content%}
+<br/>
+<div class="container-xl">
+  <form method="post" action={{ url_for('WorkOrder.eq') }}>
+    <table class="table table-bordered">
+      <tr>
+        <th><center>員工編號</center></th>
+        <th><center>設備名稱</center></th>
+        <th><center>開始時間</center></th>
+        <th><center>結束時間</center></th>
+      </tr>
+      {% for Equip in data %}
+      <tr>
+        <td> <center>{{ Equip.員工編號 }}</center></td>
+        <td> <center>{{ Equip.設備編號 }}</center></td>
+        <td> <center>{{ Equip.開始時間 }}</center></td>
+        <td> <center>{{ Equip.結束時間 }}</center></td>
+
+      </tr>
+      {% endfor %}
+    </table>
+    <div class="col align-self-end">
+      
+    </div>
+
+    
+    <center> 
+      <div class="option">
+        <a href="{{ url_for('WorkOrder.EquipmentUse') }}" class="btn btn-outline-primary">回設備列表</a>
+    </div>
+    </center>
+
+  </form>
+</div>
+{% endblock content%}
