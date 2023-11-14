@@ -403,6 +403,26 @@ class Order_List():
         sql = 'SELECT O.OID, P.PNAME, R.SALEPRICE, R.AMOUNT FROM ORDER_LIST O, RECORD R, PRODUCT P WHERE O.TNO = R.TNO AND R.PID = P.PID'
         return DB.fetchall(DB.execute(DB.connect(), sql)) # type: ignore
 
+class MFGAnalysis():
+    def month_price(i):
+        sql = 'SELECT EXTRACT(MONTH FROM to_date(WORKSTARTAT,\'yyyy/MM/dd\')), count(*) FROM UserProduceEquip WHERE EXTRACT(MONTH FROM to_date(WORKSTARTAT,\'yyyy/MM/dd\'))=:mon GROUP BY EXTRACT(MONTH FROM to_date(WORKSTARTAT,\'yyyy/MM/dd\'))'
+        return DB.fetchall( DB.execute_input( DB.prepare(sql) , {"mon": i})) # type: ignore
+
+    def month_count(i):
+        sql = 'SELECT EXTRACT(MONTH FROM to_date(WORKSTARTAT,\'yyyy/MM/dd\')), COUNT(*) FROM UserProduceEquip WHERE EXTRACT(MONTH FROM to_date(WORKSTARTAT,\'yyyy/MM/dd\'))=:mon GROUP BY EXTRACT(MONTH FROM to_date(WORKSTARTAT,\'yyyy/MM/dd\'))'
+        return DB.fetchall( DB.execute_input( DB.prepare(sql), {"mon": i})) # type: ignore
+    
+    def category_sale():
+        sql = 'SELECT count(*), PRODUCTNAME FROM(SELECT * FROM Production,Productionorder WHERE Production.PID = Productionorder.PID) GROUP BY PRODUCTNAME'
+        return DB.fetchall( DB.execute( DB.connect(), sql))
+
+    def member_sale():
+        sql = 'SELECT count(*), Operator.UEMPID, Operator.NAME FROM UserProduceEquip, Operator WHERE UserProduceEquip.UEMPID = Operator.UEMPID AND Operator.ACCESSLEVEL = :identity GROUP BY Operator.UEMPID, Operator.NAME ORDER BY count(*) DESC'
+        return DB.fetchall( DB.execute_input( DB.prepare(sql), {'identity':'OP'}))
+
+    def member_sale_count():
+        sql = 'SELECT COUNT(*), Operator.UEMPID, Operator.NAME FROM UserProduceEquip, Operator WHERE UserProduceEquip.UEMPID = Operator.UEMPID AND Operator.ACCESSLEVEL = :identity GROUP BY Operator.UEMPID, Operator.NAME ORDER BY COUNT(*) DESC'
+        return DB.fetchall( DB.execute_input( DB.prepare(sql), {'identity':'OP'}))
 
 class Analysis():
     def month_price(i):

@@ -10,9 +10,9 @@
   <div id="dashboard">
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">訂單數量分析</button>
-        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">書本銷量分類</button>
-        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">消費總額排名</button>        
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">製造單量分析</button>
+        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">產品生產分類</button>
+        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">產品生產排名</button>        
       </div>      
     </nav>
   </div>
@@ -44,26 +44,26 @@
   var count = {{dataa|tojson}};
   var optiona = {
     title: {
-      text: '各月訂單數量分析'
+      text: '各月製造數量分析'
     },
     tooltip: {},
     legend: {
-      data: ['訂單數量']
+      data: ['製造數量']
     },
     xAxis: {
       data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
     },
     yAxis: {},
     series: [{
-      name: '銷售總額',
+      name: '製造總筆數',
       type: 'bar',
       // symbol: 'circle',
       symbolSize: 16,
       data: data,
       markPoint: {
         data: [
-          {type: 'max', name: '銷量最高月份'},
-          {type: 'min', name: '銷量最低月份'}
+          {type: 'max', name: '製造量最高月份'},
+          {type: 'min', name: '製造量最低月份'}
         ]
       },
       label: {
@@ -86,7 +86,7 @@
   var data = {{datab|tojson}};
   var optionb = {
     title: {
-      text: '各類商品銷量分析',
+      text: '各類產品製造分析',
       left: 'center',
       top: 'center'
     },
@@ -114,7 +114,7 @@
   var countList = {{countList|tojson}};
   var optionc = {
     title: {
-      text: '使用者消費排名'
+      text: '操作員排名'
     },
     xAxis: {
       max: 'dataMax'
@@ -131,7 +131,7 @@
     series: [
       {
         realtimeSort: true,
-        name: '消費總額',
+        name: '製造總量',
         type: 'bar',
         data: data,
         label: {
@@ -142,7 +142,7 @@
       },
       {
         realtimeSort: true,
-        name: '訂單總數',
+        name: '製造總數',
         type: 'bar',
         data: countList,
         label: {
