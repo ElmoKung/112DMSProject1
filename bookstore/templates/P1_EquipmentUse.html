@@ -44,9 +44,12 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">{{Equip.設備編號}}</h5>
-              <p class="card-text">##{{Equip.設備名稱}}##</p>
-              
-              <a href="{{ url_for('WorkOrder.EquipmentUse', eid=Equip.設備編號) }}" class="btn btn-outline-primary">查看設備資訊</a>
+              <p class="card-text">設備:##{{Equip.設備名稱}}#{{Equip.設備類型}}##</p>
+              <p class="card-text">工作站:##{{Equip.綁訂工作站名稱}}({{Equip.綁訂工作站編號}})#{{Equip.綁訂工作站說明}}##</p>
+              <p class="card-text">製程配方:##{{Equip.製程配方}}##</p>
+              <P class="card-text">製程:##{{Equip.指定製程說明}}({{Equip.指定製程編號}})##</P>
+              <p class="card-text">製程順序:##{{Equip.製程順序}}##</p>
+              <a href="{{ url_for('WorkOrder.EquipmentUse', eid=Equip.設備編號,rid=Equip.指定製程編號) }}" class="btn btn-outline-primary">查看設備資訊</a>
             </div>
           </div>
         </div>

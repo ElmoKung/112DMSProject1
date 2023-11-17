@@ -15,6 +15,7 @@
         <th><center>設備名稱</center></th>
         <th><center>開始時間</center></th>
         <th><center>結束時間</center></th>
+        <th><center>檢驗數量</center></th>
       </tr>
       {% for Equip in data %}
       <tr>
@@ -22,6 +23,7 @@
         <td> <center>{{ Equip.設備編號 }}</center></td>
         <td> <center>{{ Equip.開始時間 }}</center></td>
         <td> <center>{{ Equip.結束時間 }}</center></td>
+        <td> <center>{{ Equip.生產數量 }}</center></td>
 
       </tr>
       {% endfor %}

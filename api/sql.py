@@ -74,8 +74,14 @@ class P1Equipment():
     def get_all_Equipment():#eId,EquipmentName,Type,OId
         sql = 'SELECT * FROM Equipment'
         return DB.fetchall(DB.execute( DB.connect(), sql))
+    def get_all_Equipment_Relatedinfo():#eId,EquipmentName,Type,OId,OID_1,
+        sql = 'select rops.sequence seq, eq.* ,opers.OPerationName,opers.description OperDesc,opers.PPid,rt.rid,rt.routename,rt.routedesc from operation opers right join equipment eq on  opers.oid=eq.oid , routeopers rops left join route rt on rops.rid=rt.rid where rops.oid=opers.oid order by rt.rid asc, rops.sequence asc'
+        return DB.fetchall(DB.execute( DB.connect(), sql))
     def get_Equipment(eid):#eId,EquipmentName,Type,OId
         sql ='SELECT * FROM Equipment WHERE eID = :id'
+        return DB.fetchone(DB.execute_input(DB.prepare(sql), {'id': eid}))
+    def get_Equipment_Relatedinfo(eid):#eId,EquipmentName,Type,OId
+        sql ='select eq.* ,opers.OPerationName,opers.description OperDesc,opers.PPid,rt.rid,rt.routename,rt.routedesc from operation opers right join equipment eq on  opers.oid=eq.oid , routeopers rops left join route rt on rops.rid=rt.rid where rops.oid=opers.oid and eID = :id'
         return DB.fetchone(DB.execute_input(DB.prepare(sql), {'id': eid}))
     def preadd_Equipment(ename):
         sql = 'SELECT EquipmentName FROM Equipment WHERE EquipmentName = :name'
@@ -223,7 +229,7 @@ class P1ProductionOrder():
         sql ='SELECT * FROM ProductionOrder WHERE WOrkOrder = :woid'
         return DB.fetchone(DB.execute_input(DB.prepare(sql), {'woid': woid}))
     def add_order(input):
-        sql = 'INSERT INTO ProductionOrder VALUES ( :pId, :rId,:woNumber, :WorkOrder)'
+        sql = 'INSERT INTO ProductionOrder VALUES ( :pId, :rId,:woNumber, :WorkOrder,:quantity)'
         DB.execute_input(DB.prepare(sql), input)
         DB.commit()
     
@@ -261,12 +267,15 @@ class P1RouteOpers():
       
 class P1UserProduceEquip():      
     def add_Use(input):
-        sql = 'INSERT INTO UserProduceEquip VALUES ( :uEmpId, :eId,:workStartAt, :workEndAt)'
+        sql = 'INSERT INTO UserProduceEquip VALUES ( :uEmpId, :eId,:workStartAt, :workEndAt,:quantity)'
         DB.execute_input(DB.prepare(sql), input)
         DB.commit()
     def get_all_Use(): #pId,rId,woNumber,WorkOrder
         sql = 'SELECT * FROM UserProduceEquip'
-        return DB.fetchall(DB.execute( DB.connect(), sql))    
+        return DB.fetchall(DB.execute( DB.connect(), sql))  
+    def get_produceqty(input):
+        sql = 'select po.productname,pqty.equipmentname,po.quantity poqty,pqty.produceqty from route rt left join routeopers rtops on rt.rid=rtops.rid left join operation opers on rtops.oid=opers.oid left join (select eq.eid,eq.oid,eq.equipmentname,nvl(sum (upe.quantity),0) produceqty from equipment eq left join userproduceequip upe on eq.eid=upe.eid group by eq.eid,eq.equipmentname,eq.oid ) pqty on  opers.oid=pqty.oid left join (select po.pid, po.rid,prod.productname,nvl(sum(po.quantity),0) quantity from productionorder po left join  production prod on po.pid=prod.pid group by po.pid,po.rid,prod.productname) po on  rt.rid=po.rid where  po.rid=:rid and pqty.eid=:eid order by rt.rid,sequence'
+        return DB.fetchall(DB.execute_input(DB.prepare(sql), input))
 class Member():
     def get_member(account):
         sql = "SELECT ACCOUNT, PASSWORD, MID, IDENTITY, NAME FROM MEMBER WHERE ACCOUNT = :id"
@@ -417,7 +426,7 @@ class MFGAnalysis():
         return DB.fetchall( DB.execute( DB.connect(), sql))
 
     def member_sale():
-        sql = 'SELECT count(*), Operator.UEMPID, Operator.NAME FROM UserProduceEquip, Operator WHERE UserProduceEquip.UEMPID = Operator.UEMPID AND Operator.ACCESSLEVEL = :identity GROUP BY Operator.UEMPID, Operator.NAME ORDER BY count(*) DESC'
+        sql = 'SELECT sum(quantity), Operator.UEMPID, Operator.NAME FROM UserProduceEquip, Operator WHERE UserProduceEquip.UEMPID = Operator.UEMPID AND Operator.ACCESSLEVEL = :identity GROUP BY Operator.UEMPID, Operator.NAME ORDER BY sum(quantity) DESC'
         return DB.fetchall( DB.execute_input( DB.prepare(sql), {'identity':'OP'}))
 
     def member_sale_count():

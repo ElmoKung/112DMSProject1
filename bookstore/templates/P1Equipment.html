@@ -20,6 +20,13 @@
   <ul class="list-group list-group-flush">
     <li class="list-group-item"><b>設備名稱</b>&nbsp;&nbsp;{{ data.設備名稱 }}</li>
     <li class="list-group-item"><b>設備類型</b>&nbsp;&nbsp;{{ data.設備類型 }}</li>
+    <li class="list-group-item"><b>綁訂工作站編號</b>&nbsp;&nbsp;{{ data.綁訂工作站編號 }}</li>
+    <li class="list-group-item"><b>綁訂工作站名稱</b>&nbsp;&nbsp;{{ data.綁訂工作站名稱 }}</li>
+    <li class="list-group-item"><b>綁訂工作站說明</b>&nbsp;&nbsp;{{ data.綁訂工作站說明 }}</li>
+    <li class="list-group-item"><b>製程配方</b>&nbsp;&nbsp;{{ data.製程配方 }}</li>
+    <li class="list-group-item"><b>指定製程編號</b>&nbsp;&nbsp;{{ data.指定製程編號 }}</li>
+    <li class="list-group-item"><b>指定製程名稱</b>&nbsp;&nbsp;{{ data.指定製程名稱 }}</li>
+    <li class="list-group-item"><b>指定製程說明</b>&nbsp;&nbsp;{{ data.指定製程說明 }}</li>
   </ul>
   <div class="card-body">
     <a href="{{ url_for('WorkOrder.wostore') }}" class="btn btn-outline-primary">回設備列表</a>
@@ -46,6 +53,7 @@
     {% endfor %}
     <input type="text" id="inputEqAt" name="workStartAt" >開始時間</input required>
     <input type="text" id="inputEqEt"  name="workEndAt" >結束時間</input required>
+    <input type='number' name='quantity' class='form-control' placeholder='請輸入數量' value='{{EQQTY[2]-EQQTY[3]}}' max='{{EQQTY[2]-EQQTY[3]}}' required>
 </select>
 </div>
     <button class="btn btn-outline-success" type="submit" value="{{data.設備編號}}" name="pid">新增紀錄</a>

@@ -181,7 +181,7 @@ def EquipmentUse():
         search = request.values.get('keyword')
         keyword = search
         
-        cursor.prepare('SELECT * FROM Equipment WHERE eId LIKE :search')
+        cursor.prepare('select eq.* ,opers.OPerationName,opers.description OperDesc,opers.PPid,rt.rid,rt.routename,rt.routedesc from operation opers right join equipment eq on  opers.oid=eq.oid , routeopers rops left join route rt on rops.rid=rt.rid where rops.oid=opers.oid and eId LIKE :search')
         cursor.execute(None, {'search': '%' + keyword + '%'})
         Equip_row = cursor.fetchall()
         Equip_data = []
@@ -192,7 +192,13 @@ def EquipmentUse():
                 '設備編號': i[0],
                 '設備名稱': i[1],
                 '設備類型': i[2],
-                '綁訂工作站編號': i[3]
+                '綁訂工作站編號': i[3],
+                '綁訂工作站名稱': i[4],
+                '綁訂工作站說明': i[5],
+                '製程配方': i[6],
+                '指定製程編號': i[7],
+                '指定製程名稱': i[8],
+                '指定製程說明': i[9]
             }
             Equip_data.append(Equip)
             total = total + 1
@@ -209,14 +215,22 @@ def EquipmentUse():
         return render_template('P1_EquipmentUse.html', single=single, keyword=search,Equip_data=Equip_data, user=current_user.name, page=1, flag=flag, count=count)    
 
     
-    elif 'eid' in request.args:
+    elif 'eid' in request.args and 'rid' in request.args:
         eid = request.args['eid']
-        data=P1Equipment.get_Equipment(eid)
+        rid = request.args['rid']
+        data=P1Equipment.get_Equipment_Relatedinfo(eid)
         tool=P1Tool.get_all_Tool()
         
+        ProduceQty=P1UserProduceEquip.get_produceqty({'rid':rid,'eid':eid})
         EquipmentName = data[1]
         Type = data[2]
         oId = data[3]
+        operName = data[4]
+        operDesc = data[5]
+        ppId = data[6]
+        rId = data[7]
+        rName = data[8]
+        rDesc = data[9]
         image = 'sdg.jpg'
 
 
@@ -226,17 +240,23 @@ def EquipmentUse():
             '設備名稱': EquipmentName,
             '設備類型': Type,
             '綁訂工作站編號': oId,
+            '綁訂工作站名稱': operName,
+            '綁訂工作站說明': operDesc,
+            '製程配方': ppId ,
+            '指定製程編號': rId ,
+            '指定製程名稱': rName ,
+            '指定製程說明': rDesc,
             '產品圖片': image
         }
 
-        return render_template('P1Equipment.html', data = Equip,ToolData=tool, user=current_user.name)
+        return render_template('P1Equipment.html', data = Equip,ToolData=tool,EQQTY=ProduceQty[0], user=current_user.name)
     
     elif 'page' in request.args:
         page = int(request.args['page'])
         start = (page - 1) * 9
         end = page * 9
         
-        Equip_row = P1Equipment.get_all_Equipment()
+        Equip_row = P1Equipment.get_all_Equipment_Relatedinfo()
         Equip_data = []
         final_data = []
         
@@ -245,7 +265,13 @@ def EquipmentUse():
                 '設備編號': i[0],
                 '設備名稱': i[1],
                 '設備類型': i[2],
-                '綁訂工作站編號': i[3]
+                '綁訂工作站編號': i[3],
+                '綁訂工作站名稱': i[4],
+                '綁訂工作站說明': i[5],
+                '製程配方': i[6],
+                '指定製程編號': i[7],
+                '指定製程名稱': i[8],
+                '指定製程說明': i[9]
                 
             }
             Equip_data.append(Equip)
@@ -263,7 +289,7 @@ def EquipmentUse():
         single = 1
         search = request.values.get('keyword')
         keyword = search
-        cursor.prepare('SELECT * FROM Equipment WHERE EquipmentName LIKE :search')
+        cursor.prepare('select eq.* ,opers.OPerationName,opers.description OperDesc,opers.PPid,rt.rid,rt.routename,rt.routedesc from operation opers right join equipment eq on  opers.oid=eq.oid , routeopers rops left join route rt on rops.rid=rt.rid where rops.oid=opers.oid and EquipmentName LIKE :search')
         cursor.execute(None, {'search': '%' + keyword + '%'})
         Equip_row = cursor.fetchall()
         Equip_data = []
@@ -274,10 +300,16 @@ def EquipmentUse():
                 '設備編號': i[0],
                 '設備名稱': i[1],
                 '設備類型': i[2],
-                '綁訂工作站編號': i[3]
+                '綁訂工作站編號': i[3],
+                '綁訂工作站名稱': i[4],
+                '綁訂工作站說明': i[5],
+                '製程配方': i[6],
+                '指定製程編號': i[7],
+                '指定製程名稱': i[8],
+                '指定製程說明': i[9]
             }
 
-            Equip_data.append(Prod)
+            Equip_data.append(Equip)
             total = total + 1
             
         if(len(Equip_data) < 9):
@@ -288,15 +320,22 @@ def EquipmentUse():
         return render_template('P1_EquipmentUse.html', keyword=search, single=single, Equip_data=Equip_data, user=current_user.name, page=1, flag=flag, count=count)    
     
     else:
-        Equip_row = P1Equipment.get_all_Equipment()
+        Equip_row = P1Equipment.get_all_Equipment_Relatedinfo()
         Equip_data = []
         temp = 0
         for i in Equip_row:
             Equip = {
-                '設備編號': i[0],
-                '設備名稱': i[1],
-                '設備類型': i[2],
-                '綁訂工作站編號': i[3]
+                '製程順序': i[0],
+                '設備編號': i[1],
+                '設備名稱': i[2],
+                '設備類型': i[3],
+                '綁訂工作站編號': i[4],
+                '綁訂工作站名稱': i[5],
+                '綁訂工作站說明': i[6],
+                '製程配方': i[7],
+                '指定製程編號': i[8],
+                '指定製程名稱': i[9],
+                '指定製程說明': i[10]
             }
             if len(Equip_data) < 9:
                 Equip_data.append(Equip)
@@ -343,20 +382,9 @@ def wo():
             
             pId111 = request.values.get('pid') # 要生產的產品編號
             rId111 = request.values.get('Route') # 要生產的流程編號
-            # 檢查購物車裡面有沒有商品
-            #product = Record.check_product(pid, tno)
-            # 取得商品價錢
-            #price = Product.get_product(pid)[2]
+            qty = request.values.get('Quantity') 
+            P1ProductionOrder.add_order( {'woNumber': tno111, 'pId':pId111, 'rId':rId111,'WorkOrder':wono1,'quantity':qty} )
 
-            # 如果購物車裡面沒有的話 把他加一個進去
-            #if(product == None):
-                #Record.add_product( {'id': tno, 'tno':pid, 'price':price, 'total':price} )
-            P1ProductionOrder.add_order( {'woNumber': tno111, 'pId':pId111, 'rId':rId111,'WorkOrder':wono1} )
-            #else:
-                # 假如購物車裡面有的話，就多加一個進去
-            #    amount = Record.get_amount(tno, pid)
-            #    total = (amount+1)*int(price)
-            #    Record.update_product({'amount':amount+1, 'tno':tno , 'pid':pid, 'total':total})
 
         elif "delete" in request.form :
             pid = request.values.get('delete')
@@ -409,8 +437,9 @@ def eq():
             tId = request.values.get('Tool') # 使用的配件編號
             st = request.values.get('workStartAt') 
             et = request.values.get('workEndAt') 
+            qty = request.values.get('quantity') 
 
-            P1UserProduceEquip.add_Use({'uEmpId':current_user.umpid,'eId':eId,'workStartAt':st,'workEndAt':et})
+            P1UserProduceEquip.add_Use({'uEmpId':current_user.umpid,'eId':eId,'workStartAt':st,'workEndAt':et,'quantity':qty})
             P1EquipementUseTool.add_use({'eId':eId,'tId':tId,'DateTime':et,'UsedTime':et})
 
             return render_template('complete.html', user=current_user.name)
@@ -631,13 +660,15 @@ def show_EQUSE_info():
         eId = i[1]
         wA = i[2]
         wE = i[3]
+        qt=i[4]
         
 
         equselist = {
             '員工編號': uId,
             '設備編號': eId,
             '開始時間': wA,
-            '結束時間': wE
+            '結束時間': wE,
+            '生產數量': qt
         }
         
         eqlist_data.append(equselist)  
